@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='PBLES',
-    version='0.0.1',
+    version='0.0.2',
     author='Martin Kuhn',
     author_email='martin.kuhn@dfki.de',
     description='Private Bi-LSTM Event Log Synthesizer (PBLES)',
@@ -14,7 +14,6 @@ setup(
         'Development Status :: 3 - Alpha',
         'Intended Audience :: Developers',
         'License :: OSI Approved :: GNU General Public License v3 (GPLv3)',
-        'Programming Language :: Python :: 3.8',
         'Programming Language :: Python :: 3.9',
         'Programming Language :: Python :: 3.10',
         'Programming Language :: Python :: 3.11',
@@ -31,5 +30,5 @@ setup(
         'tensorflow_privacy==0.9.0',
         'openpyxl==3.1.2'
     ],
-    python_requires='>=3.8',
+    python_requires='>=3.9',
 )
