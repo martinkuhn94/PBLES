@@ -2,6 +2,12 @@ from tensorflow.keras.preprocessing.text import Tokenizer
 from tensorflow.keras.preprocessing.sequence import pad_sequences
 import numpy as np
 
+""" 
+TODO
+man könnte auch mehrere Functions daraus machen, das würde den Code sehr vereinfachen:
+filter_variant_sentences, create_sequences
+"""
+
 
 def tokenize_log(event_log_sentences: list, variant: str, steps: int = 1) -> tuple:
     """
@@ -22,7 +28,7 @@ def tokenize_log(event_log_sentences: list, variant: str, steps: int = 1) -> tup
     """
     if not isinstance(event_log_sentences, list):
         raise ValueError("event_log_sentences must be a list")
-
+# TODO auch hier wieder die Konstanten, prints -> Logging
     if variant == "control-flow":
         event_log_sentences = [
             [word for word in sentence if word.startswith("concept:name") or word in ["START==START", "END==END"]]

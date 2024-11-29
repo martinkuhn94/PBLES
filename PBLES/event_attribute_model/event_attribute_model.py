@@ -5,11 +5,11 @@ def build_attribute_model(df):
     """Build the attribute model from the DataFrame with event name prefixes."""
 
     base_model = pd.DataFrame(columns=["Current State", "Next State"])
-
+    # TODO die statischen Sachen würde ich wieder auslagern, evtl wäre es auch eine Idee diese in eine große Config zu schieben, da sis sich ja sehr wiederholen
     df = df.drop(columns=["case:concept:name"])
     column_names = df.columns
     event_names = df["concept:name"].unique()
-
+    # TODO ich glaube es ist effizienter in eine Liste zu schreiben und diese dann im gesamten an das DF zu hängen, concat ist sehr rechenintensiv
     for event_name in event_names:
         for i in range(len(column_names) - 1):
             current_state = f"{event_name}=={column_names[i]}"

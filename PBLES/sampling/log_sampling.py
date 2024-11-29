@@ -6,6 +6,13 @@ import numpy as np
 from tensorflow.keras import backend as K
 from keras.utils import pad_sequences
 
+"""
+TODO
+die Funktion müssen wir zerschlagen ;-) 
+
+evtl. einfach mal mit ChatGPT geben mit "Break Function into Smaller Subfunctions" o.ä.
+"""
+
 
 def sample_batch(
         sample_size: int,
@@ -54,6 +61,14 @@ def sample_batch(
                 prediction_output = prediction_output[i]  # Get predictions for current sequence
                 prediction_output = prediction_output / np.sum(prediction_output)
 
+"""
+ich bin mir nicht ganz sicher, aber machst du das validieren der valieden Token mehrfach? Falls ja, evtl. einmal im Dict vorberechnen, dann muss es nicht bei jeder Iteration neu generiert werden.
+valid_tokens_dict = {
+    column: [index for index, word in index_word.items() if f"=={column}==" in word]
+    for column in column_list
+}
+"""
+                    
                 # Filter valid tokens based on column and latest concept name
                 if latest_concept_name is None:
                     valid_tokens = [
@@ -92,12 +107,35 @@ def sample_batch(
     synthetic_event_log_sentences.extend(batch_seed_texts)
     K.clear_session()
 
+# TODO: würde sich sehr gut eigenen zum auslagern in eine Function 
+"""
+Vorschlag von ChatGPT:
+def clean_sequence(sequence: list[str], max_length: int) -> list[str]:
+    if len(sequence) >= max_length:
+        return []
+    trace = [START_TOKEN]
+    for word in sequence:
+        if word and word not in {START_TOKEN, END_TOKEN}:
+            if word.startswith("case:"):
+                trace.append(word)
+            else:
+                trace.append("==".join(word.split("==")[1:]))
+    trace.append("END==END")
+    return trace
+--> der Call
+clean_synthetic_event_log_sentences = [
+    clean_sequence(sentence, max_sequence_len * 1.5)
+    for sentence in synthetic_event_log_sentences
+    if len(sentence) < max_sequence_len * 1.5
+]
+"""
+
     # Clean event prefixes and exclude overly long sequences
     clean_synthetic_event_log_sentences = []
     for sentence in synthetic_event_log_sentences:
         if len(sentence) >= (max_sequence_len * 1.5):
             continue
-
+# TODO: würde ich als Konstanten am Anfang der Datei definieren, auch für End: START_TOKEN = "START==START"
         trace = ["START==START"]
         for word in sentence:
             if not word:

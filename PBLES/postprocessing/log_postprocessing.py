@@ -17,6 +17,7 @@ def clean_xes_file(xml_file, output_file):
     """
     tree = ET.parse(xml_file)
     root = tree.getroot()
+    # TODO: würde ich alles als Konstante oben auslagern, den NS und NA_VALUES
     ET.register_namespace('', 'http://www.xes-standard.org/')
     ns = {'': 'http://www.xes-standard.org/'}
 
@@ -237,6 +238,7 @@ def create_dataframe_from_sentences(transformed_sentences, dict_dtypes) -> pd.Da
         except Exception:
             removed_traces += 1
 
+    # TODO Vercorisierte Funktionen sparen Laufzeit, z.B df = pd.concat([pd.DataFrame(case) for case in parsed_data], ignore_index=True)
     df = pd.DataFrame()
     for case in parsed_data:
         df = pd.concat([df, pd.DataFrame(case)], ignore_index=True)
@@ -277,6 +279,20 @@ def convert_column_dtype(column: pd.Series, dtype: str) -> pd.Series:
     Returns:
     pd.Series: Converted column.
     """
+
+    """
+    TODO Idee, man kann es auch über ein Dict lösen:
+    type_converters = {
+        "int64": lambda col: pd.to_numeric(col.replace(['', 'nan', 'NaN', 'NULL', 'null'], np.nan), errors='coerce').astype("Int64"),
+        "float": lambda col: col.astype(float),
+        "float64": lambda col: col.astype(float),
+        "boolean": lambda col: col.astype(bool),
+        "date": lambda col: pd.to_datetime(col, errors="coerce"),
+        "string": lambda col: col.astype(str),
+        "object": lambda col: col.astype(str),
+    }
+    """
+    
     if dtype == "int64":
         # Convert empty strings and non-numeric values to NaN first
         cleaned_column = column.replace(['', 'nan', 'NaN', 'NULL', 'null'], np.nan)

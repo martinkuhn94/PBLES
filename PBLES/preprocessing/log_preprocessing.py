@@ -11,7 +11,7 @@ from diffprivlib.mechanisms import Laplace
 from tensorflow_privacy import compute_dp_sgd_privacy_statement
 
 from PBLES.event_attribute_model.event_attribute_model import build_attribute_model
-
+# TODO Konstante auslagern, conseptname, timestamp, case, start, end
 
 os.environ["LOKY_MAX_CPU_COUNT"] = str(max(os.cpu_count() - 1, 1))
 
@@ -118,7 +118,7 @@ def calculate_dp_bounds(df, epsilon, std_multiplier=2):
 
     return dp_bounds
 
-
+# TODO kleine funktionen
 def calculate_cluster_dp(df, max_clusters, epsilon):
     """
     Calculate clusters for each numeric column in a pandas DataFrame using DP-KMeans and differentially private bounds.
@@ -189,7 +189,8 @@ def calculate_cluster_dp(df, max_clusters, epsilon):
 
     return df, cluster_dict
 
-
+# TOOD Calculate_clsuter und dp sind fast identisch: https://dfkide-my.sharepoint.com/:i:/g/personal/jogr04_dfki_de/EVj6Stcyv-FCvn2lbeeiUOQBe-jGNjjxN1QAjwpu8_EsyQ?e=kaY8Ky die Codeduplikate sollten ausgelagert werden in eigene Funktionen
+# evtl apply_clustering, calculate_clusters als ausgelagerte Funktionen
 def calculate_cluster(df, max_clusters):
     """
     Calculate clusters for each numeric column in a pandas DataFrame using KMeans.
@@ -408,7 +409,7 @@ def get_attribute_dtype_mapping(df: pd.DataFrame) -> dict:
 
     return {'attribute_datatypes': dtype_dict}
 
-
+# TODO in unterfunktionen aufteilen
 def preprocess_event_log(log, max_clusters: int, trace_quantile: float, epsilon: float, batch_size: int, epochs: int):
     try:
         df = pm4py.convert_to_dataframe(log)

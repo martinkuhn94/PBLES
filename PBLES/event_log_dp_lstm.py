@@ -196,6 +196,27 @@ class EventLogDpLstm:
         )(inputs)
         x = Masking(mask_value=0)(embedding_layer)
 
+        """
+        Es wäre auch als dictionary factory möglich
+
+        layer_factory = {
+        "LSTM": lambda units: LSTM(units, return_sequences=True),
+        "Bi-LSTM": lambda units: Bidirectional(LSTM(units, return_sequences=True)),
+        "GRU": lambda units: GRU(units, return_sequences=True),
+        "Bi-GRU": lambda units: Bidirectional(GRU(units, return_sequences=True)),
+        "RNN": lambda units: SimpleRNN(units, return_sequences=True),
+        "Bi-RNN": lambda units: Bidirectional(SimpleRNN(units, return_sequences=True)),
+        }
+        
+        # Build the layers based on the method and units per layer
+        for i, units in enumerate(self.units_per_layer):
+            if self.method not in layer_factory:
+                raise ValueError(f"Unsupported method: {self.method}")
+            if not isinstance(self.units_per_layer, list):
+                raise ValueError("`units_per_layer` should be a list of integers.")
+            x = layer_factory[self.method](units)(x)
+        """
+        
         for i, units in enumerate(self.units_per_layer):
             if self.method == "LSTM":
                 x = LSTM(units, return_sequences=True)(x)
@@ -289,6 +310,7 @@ class EventLogDpLstm:
         synthetic_df = pd.DataFrame()
 
         while len_synthetic_event_log < sample_size:
+            # TODO: ich würde alle prints durch Logging ersetzen
             print("Sampling Event Log with:", sample_size - len_synthetic_event_log, "traces left")
             sample_size_new = sample_size - len_synthetic_event_log
 
@@ -319,6 +341,24 @@ class EventLogDpLstm:
         Parameters:
         path (str): Path to save the trained PBLES Model.
         """
+
+"""
+TODO
+wäre es evtl. gut die Hyperparameter auch abzuspeichern?
+model:
+  embedding_output_dims: 16
+  method: LSTM
+  units_per_layer: [64, 32]
+  epochs: 10
+  batch_size: 32
+privacy:
+  l2_norm_clip: 1.5
+  epsilon: 1.0
+
+  oder ist das unten das yaml dump? 
+  """
+
+        
         os.makedirs(path, exist_ok=True)
 
         self.model.save(os.path.join(path, "model.keras"))
